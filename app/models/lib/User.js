@@ -10,6 +10,10 @@ const User = mongoose.Schema({
     isEmailVerified: Boolean,
     sWalletAddress: String,
     nOTP: Number,
+    eStatus: {
+        type: String,
+        enum: ['y', 'n', 'd'],
+    },
 });
 
 module.exports = mongoose.model('users', User);
