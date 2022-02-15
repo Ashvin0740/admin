@@ -13,7 +13,7 @@ function Router() {
     this.corsOptions = {
         origin: ['*'],
         methods: ['GET', 'POST'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        allowedHeaders: ['Content-Type', 'authorization'],
     };
 }
 
