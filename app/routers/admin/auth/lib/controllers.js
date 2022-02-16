@@ -26,7 +26,7 @@ controllers.login = (req, res) => {
 
         admin.sToken = _.encodeToken({ _id: admin._id.toString() });
         admin.save(_.errorCallback);
-        return res.reply(messages.success('Login'), {}, { authorization: admin.sToken, 'Access-Control-Expose-Headers': '*' });
+        return res.reply(messages.success('Login'), { authorization: admin.sToken }, { authorization: admin.sToken, 'Access-Control-Expose-Headers': '*' });
     });
 };
 
@@ -40,13 +40,13 @@ controllers.forgotPassword = (req, res) => {
         if (!admin) return res.reply(messages.custom.user_not_found);
 
         const sLinkToken = _.encodeToken({ sEmail: body.sEmail }, { expiresIn: '1h' });
-        const link = `${process.env.FRONTEND_URL}/reset-password.html?token=${sLinkToken}`
+        const link = `${process.env.FRONTEND_URL}/reset-password.html?token=${sLinkToken}`;
         res.reply(messages.no_prefix('Redirecting to resetting password'), link); // token is send as params in resetpassword api
     });
 };
 
 controllers.resetPassword = (req, res) => {
-    const body = _.pick(req.body, ['sPassword', 'sConfirmPassword','token']);
+    const body = _.pick(req.body, ['sPassword', 'sConfirmPassword', 'token']);
     if (!body.token) return res.reply(messages.unauthorized());
 
     const decodedToken = _.verifyToken(body.token);

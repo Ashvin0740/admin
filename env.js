@@ -12,12 +12,12 @@ oEnv.dev = {
 };
 
 oEnv.stag = {
-    BASE_URL: 'http://localhost:5000/',
-    BASE_API_PATH: 'http://localhost:5000/api/v1',
+    BASE_URL: 'http://184.73.111.236:5000/',
+    BASE_API_PATH: 'http://184.73.111.236:5000/api/v1',
     DB_URL: 'mongodb+srv://shakil:shakil@cluster0.kvp24.mongodb.net/metatank',
     GAME_URL: 'http://localhost:3000/api/v1',
     REDIS_HOST: 'localhost',
-    FRONTEND_URL: 'http://localhost:5500'
+    FRONTEND_URL: 'http://localhost:5500',
 };
 
 oEnv.prod = {
