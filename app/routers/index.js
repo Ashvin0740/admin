@@ -12,8 +12,8 @@ function Router() {
     this.httpServer = http.createServer(this.app);
     this.corsOptions = {
         origin: ['*'],
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['Content-Type', 'authorization'],
+        // methods: ['GET', 'POST'],
+        'Access-Control-Allow-Origin': '*',
     };
 }
 
@@ -26,7 +26,7 @@ Router.prototype.setupMiddleware = function() {
     this.app.disable('etag');
     this.app.enable('trust proxy');
     this.app.use(helmet());
-    this.app.use(cors(this.corsOptions));
+    this.app.use(cors());
     this.app.use(compression());
     this.app.use(bodyParser.json({ limit: '16mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '16mb', extended: true, parameterLimit: 50000 }));
