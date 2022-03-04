@@ -17,7 +17,9 @@ oEnv.stag = {
     DB_URL: 'mongodb+srv://metatank:metatank123@cluster0.57mxh.mongodb.net/metatank', // metatank:metatank123
     GAME_URL: 'http://localhost:3000/api/v1',
     REDIS_HOST: 'localhost',
-    FRONTEND_URL: 'http://localhost:5500',
+    FRONTEND_URL: 'http://meta-tank-dev.s3-website-us-east-1.amazonaws.com',
+    SMTP_EMAIL: 'team@metatank.app',
+    SMTP_PASS: 'MetaTank#123',
 };
 
 oEnv.prod = {
@@ -33,6 +35,8 @@ process.env.SUPPORT_EMAIL = 'no-reply@metatank.com';
 process.env.BASE_URL = oEnv[process.env.NODE_ENV].BASE_URL;
 process.env.FRONTEND_URL = oEnv[process.env.NODE_ENV].FRONTEND_URL;
 process.env.BASE_API_PATH = oEnv[process.env.NODE_ENV].BASE_API_PATH;
+process.env.SMTP_EMAIL = oEnv[process.env.NODE_ENV].SMTP_EMAIL;
+process.env.SMTP_PASS = oEnv[process.env.NODE_ENV].SMTP_PASS;
 process.env.GAME_URL = oEnv[process.env.NODE_ENV].GAME_URL;
 process.env.JWT_SECRET = 'jwt-secret';
 process.env.DB_URL = oEnv[process.env.NODE_ENV].DB_URL;

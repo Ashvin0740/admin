@@ -1,4 +1,5 @@
 const { Admin } = require('../../../../models');
+const { mailer } = require('../../../../utils');
 
 const controllers = {};
 
@@ -40,8 +41,9 @@ controllers.forgotPassword = (req, res) => {
         if (!admin) return res.reply(messages.custom.user_not_found);
 
         const sLinkToken = _.encodeToken({ sEmail: body.sEmail }, { expiresIn: '1h' });
-        const link = `${process.env.FRONTEND_URL}/reset-password.html?token=${sLinkToken}`;
-        res.reply(messages.no_prefix('Redirecting to resetting password'), link); // token is send as params in resetpassword api
+        const sLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${sLinkToken}`;
+        mailer.send({ sLink, type: 'forgotPassword', sEmail: body.sEmail }, _.errorCallback);
+        res.reply(messages.no_prefix('Redirecting to resetting password'), sLink); // token is send as params in resetpassword api
     });
 };
 
