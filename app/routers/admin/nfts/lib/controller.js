@@ -3,20 +3,23 @@ const { NFT } = require('../../../../models');
 const controller = {};
 
 controller.listNft = (req, res) => {
-    const body = _.pick(req.query, ['sort', 'orderBy', 'size', 'pageNumber', 'search']);
-    log.red(body);
-    const startIndex = body.pageNumber * body.size;
-    const endIndex = parseInt(body.size);
+    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search']);
     const sort = { dCreatedDate: -1 };
     const query = [
         {
             $sort: sort,
         },
         {
-            $skip: startIndex,
+            $skip: parseInt(body.start),
         },
         {
-            $limit: endIndex,
+            $limit: parseInt(body.length),
+        },
+        {
+            $project: {
+                _id: true,
+                sFileName: true,
+            },
         },
     ];
     NFT.aggregate(query, (error, nfts) => {
