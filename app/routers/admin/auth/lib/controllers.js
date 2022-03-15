@@ -27,7 +27,8 @@ controllers.login = (req, res) => {
 
         admin.sToken = _.encodeToken({ _id: admin._id.toString() });
         admin.save(_.errorCallback);
-        return res.reply(messages.success('Login'), { authorization: admin.sToken }, { authorization: admin.sToken, 'Access-Control-Expose-Headers': '*' });
+        res.cookie('token', admin.sToken).reply(messages.successfully('Login'));
+        // return res.reply(messages.success('Login'), { authorization: admin.sToken }, { authorization: admin.sToken, 'Access-Control-Expose-Headers': '*' });
     });
 };
 
