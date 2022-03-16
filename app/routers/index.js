@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const adminRoute = require('./admin');
 
 function Router() {
@@ -25,6 +26,7 @@ Router.prototype.setupMiddleware = function() {
     this.app.disable('etag');
     this.app.enable('trust proxy');
     this.app.use(helmet());
+    this.app.use(cookieParser());
     this.app.use(cors(this.corsOptions));
     this.app.use(compression());
     this.app.use(bodyParser.json({ limit: '16mb' }));
