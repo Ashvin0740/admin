@@ -3,6 +3,7 @@ const { Admin } = require('../../../../models');
 const middleware = {};
 
 middleware.isAuthenticated = (req, res, next) => {
+    log.green(req.cookies);
     const token = req.header('authorization');
     if (!token) return res.reply(messages.unauthorized());
 

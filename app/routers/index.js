@@ -11,7 +11,7 @@ function Router() {
     this.app = express();
     this.httpServer = http.createServer(this.app);
     this.corsOptions = {
-        origin: '*',
+        origin: ['http://localhost:5001', 'http://184.73.111.236:5001'],
         methods: ['GET', 'POST'],
     };
 }
