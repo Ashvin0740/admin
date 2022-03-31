@@ -14,6 +14,9 @@ function Router() {
     this.corsOptions = {
         origin: '*',
         methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'verification'],
+        // 'Access-Control-Expose-Headers': '*',
+        exposedHeaders: ['*'],
     };
 }
 
