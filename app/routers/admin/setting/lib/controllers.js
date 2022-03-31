@@ -10,8 +10,7 @@ controllers.get = (req, res) => {
 };
 
 controllers.updateSetting = (req, res) => {
-    const body = _.pick(req.body, ['nEntryFee', 'nWinningAmount']);
-    log.cyan(body);
+    const body = _.pick(req.body, ['nEntryFee', 'nWinningAmount', 'oReWard']);
     const updateQuery = { $set: body };
     Setting.findOneAndUpdate({}, updateQuery, { new: true }, error => {
         if (error) res.reply(messages.server_error(), error.toString());
