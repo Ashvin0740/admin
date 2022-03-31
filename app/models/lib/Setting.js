@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Setting = mongoose.Schema({
     nEntryFee: Number,
     nWinningAmount: Number,
-    oReWard: {
+    oReward: {
         _id: false,
         nBonanza: Number,
         nPercentage: Number,
