@@ -40,11 +40,11 @@ middlewares.verifyToken = (req, res, next) => {
     if (!decodedToken || decodedToken === 'jwt expired') return res.reply(messages.expired('Link'));
     if (body.sPassword !== body.sConfirmPassword) return res.reply(messages.not_matched('Passwords'));
 
-    const query = { _id: decodedToken._id };
+    const query = { sEmail: decodedToken.sEmail };
     Admin.findOne(query, (error, admin) => {
         if (error) return res.reply(messages.server_error(), error.toString());
         if (!admin) return res.reply(messages.custom.user_not_found);
-        if (admin.sVerificationToken !== body.token) return res.reply(messages.unauthorized());
+        if (admin.sVerificationToken !== body.token) return res.reply(messages.expired('Link'));
         req.admin = admin;
         next();
     });
