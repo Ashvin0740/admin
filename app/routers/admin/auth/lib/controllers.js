@@ -43,6 +43,8 @@ controllers.forgotPassword = (req, res) => {
 
         const sLinkToken = _.encodeToken({ sEmail: body.sEmail }, { expiresIn: '1h' });
         const sLink = `${process.env.FRONTEND_URL}/reset-password?token=${sLinkToken}`;
+        admin.sVerificationToken = sLinkToken;
+        admin.save(_.errorCallback);
         mailer.send({ sLink, type: 'forgotPassword', sEmail: body.sEmail }, _.errorCallback);
         res.reply(messages.success()); // token is send as params in resetpassword api
     });
@@ -50,22 +52,27 @@ controllers.forgotPassword = (req, res) => {
 
 controllers.resetPassword = (req, res) => {
     const body = _.pick(req.body, ['sPassword', 'sConfirmPassword', 'token']);
-    if (!body.token) return res.reply(messages.unauthorized());
 
-    const decodedToken = _.verifyToken(body.token);
-    if (!decodedToken || decodedToken === 'jwt expired') return res.reply(messages.expired('Link'));
-    if (body.sPassword !== body.sConfirmPassword) return res.reply(messages.not_matched('Passwords'));
-
-    const query = { sEmail: decodedToken.sEmail };
+    const query = { _id: req.admin._id };
     const update = {
         $set: {
             sPassword: _.encryptPassword(body.sPassword),
+        },
+        $unset: {
+            sVerificationToken: true,
         },
     };
 
     Admin.updateOne(query, update, error => {
         if (error) return res.reply(messages.server_error(), error.toString());
         res.reply(messages.successfully('Your password has been changed'));
+    });
+};
+
+controllers.logout = (req, res) => {
+    Admin.updateOne({ _id: req.admin._id }, { $unset: { sToken: true } }, error => {
+        if (error) return res.reply(messages.server_error(), error.toString());
+        res.reply(messages.success());
     });
 };
 

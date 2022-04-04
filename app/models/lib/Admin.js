@@ -6,6 +6,7 @@ const Admin = mongoose.Schema({
     sMobile: String,
     sEmail: String,
     sToken: String,
+    sVerificationToken: String,
     isEmailVerified: Boolean,
     nOTP: Number,
 });
