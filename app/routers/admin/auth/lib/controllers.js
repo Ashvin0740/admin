@@ -42,9 +42,9 @@ controllers.forgotPassword = (req, res) => {
         if (!admin) return res.reply(messages.custom.user_not_found);
 
         const sLinkToken = _.encodeToken({ sEmail: body.sEmail }, { expiresIn: '1h' });
-        const sLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${sLinkToken}`;
+        const sLink = `${process.env.FRONTEND_URL}/reset-password?token=${sLinkToken}`;
         mailer.send({ sLink, type: 'forgotPassword', sEmail: body.sEmail }, _.errorCallback);
-        res.reply(messages.no_prefix('Redirecting to resetting password'), sLink); // token is send as params in resetpassword api
+        res.reply(messages.success()); // token is send as params in resetpassword api
     });
 };
 

@@ -17,7 +17,7 @@ oEnv.stag = {
     DB_URL: 'mongodb+srv://metatank:metatank123@cluster0.57mxh.mongodb.net/metatank', // metatank:metatank123
     GAME_URL: 'http://localhost:3000/api/v1',
     REDIS_HOST: 'localhost',
-    FRONTEND_URL: 'http://meta-tank-dev.s3-website-us-east-1.amazonaws.com',
+    FRONTEND_URL: 'http://184.73.111.236:5001/a',
     SMTP_EMAIL: 'team@metatank.app',
     SMTP_PASS: 'MetaTank#123',
 };
