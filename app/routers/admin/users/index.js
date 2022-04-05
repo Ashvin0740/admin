@@ -5,6 +5,7 @@ const controller = require('./lib/controllers');
 router.use(middleware.isAuthenticated);
 
 router.get('/list', controller.list);
-router.get('', controller.view);
+router.get('/view/:iUserId', controller.view);
+router.post('/update', controller.update);
 
 module.exports = router;
