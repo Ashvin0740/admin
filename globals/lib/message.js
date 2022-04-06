@@ -16,7 +16,6 @@ const notifications = {};
 
 const builder = {
     wrong_credentials: prefix => builder.prepare(403, prefix, 'Invalid credentials'),
-    unauthorised: prefix => builder.prepare(401, prefix, 'Authentication Error, Please try logging again'),
     invalid_req: prefix => builder.prepare(406, prefix, 'invalid Request'),
     wrong_otp: prefix => builder.prepare(403, prefix, 'entered OTP is invalid'),
     server_error: prefix => builder.prepare(500, prefix, 'server error'),

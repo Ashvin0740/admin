@@ -27,6 +27,16 @@ controller.list = (req, res) => {
             },
         },
         {
+            $project: {
+                dCreatedDate: true,
+                eStatus: true,
+                sWalletAddress: true,
+                sFirstName: { $ifNull: ['$sFirstName', '-'] },
+                sLastName: { $ifNull: ['$sLastName', '-'] },
+                nStamina: true,
+            },
+        },
+        {
             $facet: {
                 users: facetArray,
                 count: [
@@ -53,7 +63,7 @@ controller.view = (req, res) => {
 };
 
 controller.update = (req, res) => {
-    const body = _.pick(req.body, ['iUserId', 'nStamina', 'sFirstName', 'sLastName', 'sWalletAddress']);
+    const body = _.pick(req.body, ['iUserId', 'nStamina', 'sFirstName', 'sLastName', 'sWalletAddress', 'eStatus']);
     const query = { _id: body.iUserId };
     const updateQuery = { $set: body };
     User.updateOne(query, updateQuery, error => {
