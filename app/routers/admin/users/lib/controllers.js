@@ -1,4 +1,5 @@
-const { User } = require('../../../../models');
+const { User, Transaction, MetaGame } = require('../../../../models');
+const { mongodb } = require('../../../../utils');
 
 const controller = {};
 
@@ -60,6 +61,54 @@ controller.view = (req, res) => {
         if (error) return res.reply(messages.error(), error.toString());
         res.reply(messages.success(), user);
     });
+};
+
+controller.statistics = async (req, res) => {
+    try {
+        const body = _.pick(req.params, ['iUserId']);
+        const iUserId = mongodb.mongify(body.iUserId);
+        const gameQuery = [
+            {
+                $group: {
+                    _id: null,
+                    nTotalBattle: { $sum: { $cond: [{ $eq: ['$aParticipant.iUserId', iUserId] }, 1, 0] } },
+                    nTotalWon: { $sum: { $cond: [{ $eq: ['$iWinnerId', iUserId] }, 1, 0] } },
+                },
+            },
+        ];
+        const transactionQuery = [
+            {
+                $match: {
+                    iUserId,
+                },
+                $group: {
+                    _id: null,
+                    nTotalEarned: { $sum: { $cond: [{ $and: [{ $eq: ['$eType', 'credit'] }, { $eq: ['$eCategory', 'game'] }] }, '$nAmount', 0] } },
+                    nTotalClaim: { $sum: { $cond: [{ $and: [{ $eq: ['$eType', 'debit'] }, { $eq: ['$eCategory', 'wallet'] }] }, '$nAmount', 0] } },
+                },
+            },
+        ];
+        const [transactionResult, gameResult] = await Promise.all(Transaction.aggregate(transactionQuery), MetaGame.aggregate(gameQuery));
+        const response = {
+            nTotalEarned: 0,
+            nTotalClaim: 0,
+            nTotalBattle: 0,
+            nTotalWon: 0,
+            nTotalLoss: 0,
+        };
+        if (transactionResult.length) {
+            response.nTotalEarned = transactionResult[0].nTotalEarned;
+            response.nTotalClaim = transactionResult[0].nTotalClaim;
+        }
+        if (gameResult.length) {
+            response.nTotalBattle = gameResult[0].nTotalBattle;
+            response.nTotalWon = gameResult[0].nTotalWon;
+            response.nTotalLoss = response.nTotalBattle - response.nTotalWon;
+        }
+        res.reply(messages.success(), response);
+    } catch (error) {
+        res.reply(messages.error(), error.toString());
+    }
 };
 
 controller.update = (req, res) => {
