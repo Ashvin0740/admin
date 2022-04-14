@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const shortid = require('shortid');
 const axios = require('axios');
-const log = require('./log');
 const https = require('https');
 const http = require('http');
+const queryString = require('querystring');
+const log = require('./log');
 
 const _ = {};
 
@@ -110,9 +110,9 @@ _.isEmptyObject = function(obj = {}) {
     return !Object.keys(obj).length;
 };
 
-_.isEqual = function (id1, id2) {
+_.isEqual = function(id1, id2) {
     return (id1 ? id1.toString() : id1) === (id2 ? id2.toString() : id2);
-}
+};
 
 _.formattedDate = function() {
     return new Date().toLocaleString('en-us', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' });
@@ -256,6 +256,23 @@ _.isUserName = function(name) {
     return !regeX.test(name);
 };
 
+_.searchRegex = search => {
+    if (!search) {
+        return '';
+    }
+    return search
+        .replace(/\\/g, '\\\\')
+        .replace(/\$/g, '\\$')
+        .replace(/\*/g, '\\*')
+        .replace(/\+/g, '\\+')
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]')
+        .replace(/\)/g, '\\)')
+        .replace(/\(/g, '\\(')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"');
+};
+
 _.isPassword = function(password) {
     const regeX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/;
     return !regeX.test(password);
@@ -270,7 +287,6 @@ _.randomizeArray = function(array = []) {
         [array[i], array[randomNumber]] = [array[randomNumber], array[i]];
     }
     return array;
-
 };
 
 _.randomBetween = function(min, max) {

@@ -4,10 +4,18 @@ const { mongodb } = require('../../../../utils');
 const controller = {};
 
 controller.list = (req, res) => {
-    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search']);
+    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search', 'draw']);
     const sort = { dCreatedDate: -1 };
     const startIndex = parseInt(body.start) || 0;
     const endIndex = parseInt(body.length) || 10;
+
+    const match = { eStatus: { $ne: 'd' } };
+
+    if (body.search?.value) {
+        const search = _.searchRegex(body.search?.value);
+        match.$or = [];
+        match.$or.push({ sFirstName: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sLastName: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
+    }
 
     const facetArray = [
         {
@@ -17,15 +25,13 @@ controller.list = (req, res) => {
             $skip: startIndex,
         },
         {
-            $limit: endIndex,
+            $limit: startIndex + endIndex,
         },
     ];
 
     const query = [
         {
-            $match: {
-                eStatus: { $ne: 'd' },
-            },
+            $match: match,
         },
         {
             $project: {
@@ -42,16 +48,32 @@ controller.list = (req, res) => {
                 users: facetArray,
                 count: [
                     {
-                        $count: 'totalData',
+                        $count: 'recordsTotal',
                     },
                 ],
             },
+        },
+        {
+            $unwind: '$count',
         },
     ];
 
     User.aggregate(query, (error, users) => {
         if (error) return res.reply(messages.error(), error.toString());
-        res.reply(messages.success(), users);
+        if (!users.length)
+            return res.reply(messages.success(), {
+                data: [],
+                draw: body.draw,
+                recordsTotal: 0,
+                recordsFiltered: 0,
+            });
+
+        res.reply(messages.success(), {
+            data: users[0].users,
+            draw: body.draw,
+            recordsTotal: users[0].count.recordsTotal,
+            recordsFiltered: users[0].users.length,
+        });
     });
 };
 
