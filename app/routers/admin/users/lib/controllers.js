@@ -6,7 +6,7 @@ const controller = {};
 controller.list = (req, res) => {
     const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search']);
     const sort = { dCreatedDate: -1 };
-    const startIndex = parseInt(body.start) || 1;
+    const startIndex = parseInt(body.start) || 0;
     const endIndex = parseInt(body.length) || 10;
 
     const facetArray = [
@@ -29,12 +29,12 @@ controller.list = (req, res) => {
         },
         {
             $project: {
-                dCreatedDate: true,
+                nStamina: true,
                 eStatus: true,
                 sWalletAddress: true,
                 sFirstName: { $ifNull: ['$sFirstName', '-'] },
                 sLastName: { $ifNull: ['$sLastName', '-'] },
-                nStamina: true,
+                // dCreatedDate: true,
             },
         },
         {
