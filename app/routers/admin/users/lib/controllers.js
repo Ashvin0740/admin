@@ -78,8 +78,24 @@ controller.list = (req, res) => {
 };
 
 controller.view = (req, res) => {
-    const { iUserId } = _.pick(req.body, ['iUserId']);
-    User.findById(iUserId, (error, user) => {
+    const { iUserId } = _.pick(req.params, ['iUserId']);
+    const query = [
+        {
+            $match: {
+                _id: mongodb.mongify(iUserId),
+            },
+        },
+        {
+            $project: {
+                sWalletAddress: true,
+                sFirstName: { $ifNull: ['$sFirstName', '-'] },
+                sLastName: { $ifNull: ['$sLastName', '-'] },
+                nStamina: true,
+            },
+        },
+    ];
+
+    User.aggregate(query, (error, [user]) => {
         if (error) return res.reply(messages.error(), error.toString());
         res.reply(messages.success(), user);
     });
@@ -138,6 +154,14 @@ controller.update = (req, res) => {
     const query = { _id: body.iUserId };
     const updateQuery = { $set: body };
     User.updateOne(query, updateQuery, error => {
+        if (error) return res.reply(messages.error(), error.toString());
+        res.reply(messages.success());
+    });
+};
+
+controller.delete = (req, res) => {
+    const { iUserId } = _.pick(req.body, ['iUserId']);
+    User.updateOne({ _id: iUserId }, { $set: { eStatus: 'd' } }, error => {
         if (error) return res.reply(messages.error(), error.toString());
         res.reply(messages.success());
     });

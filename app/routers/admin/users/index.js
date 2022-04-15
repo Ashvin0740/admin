@@ -8,5 +8,6 @@ router.get('/list', controller.list);
 router.get('/view/:iUserId', controller.view);
 router.get('/statistics/:iUserId', controller.view);
 router.post('/update', controller.update);
+router.post('/delete', controller.delete);
 
 module.exports = router;

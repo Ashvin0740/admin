@@ -4,6 +4,8 @@ const User = mongoose.Schema(
     {
         isEmailVerified: Boolean,
         sUserName: String,
+        sFirstName: String,
+        sLastName: String,
         sMobile: String,
         sEmail: String,
         sToken: String,
