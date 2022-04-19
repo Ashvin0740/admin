@@ -105,6 +105,7 @@ controller.statistics = async (req, res) => {
     try {
         const body = _.pick(req.params, ['iUserId']);
         const iUserId = mongodb.mongify(body.iUserId);
+
         const gameQuery = [
             {
                 $group: {
@@ -114,6 +115,7 @@ controller.statistics = async (req, res) => {
                 },
             },
         ];
+
         const transactionQuery = [
             {
                 $match: {
@@ -126,6 +128,7 @@ controller.statistics = async (req, res) => {
                 },
             },
         ];
+
         const [transactionResult, gameResult] = await Promise.all(Transaction.aggregate(transactionQuery), MetaGame.aggregate(gameQuery));
         const response = {
             nTotalEarned: 0,
@@ -133,7 +136,9 @@ controller.statistics = async (req, res) => {
             nTotalBattle: 0,
             nTotalWon: 0,
             nTotalLoss: 0,
+            nProficiency: 0,
         };
+
         if (transactionResult.length) {
             response.nTotalEarned = transactionResult[0].nTotalEarned;
             response.nTotalClaim = transactionResult[0].nTotalClaim;
@@ -142,6 +147,7 @@ controller.statistics = async (req, res) => {
             response.nTotalBattle = gameResult[0].nTotalBattle;
             response.nTotalWon = gameResult[0].nTotalWon;
             response.nTotalLoss = response.nTotalBattle - response.nTotalWon;
+            response.nProficiency = response.nTotalWon / response.nTotalBattle;
         }
         res.reply(messages.success(), response);
     } catch (error) {
