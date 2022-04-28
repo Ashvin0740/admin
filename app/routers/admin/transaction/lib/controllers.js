@@ -83,7 +83,7 @@ controller.list = (req, res) => {
             data: transactions[0].transactions,
             draw: body.draw,
             recordsTotal: transactions[0].count.recordsTotal,
-            recordsFiltered: transactions[0].transactions.length,
+            recordsFiltered: transactions[0].count.recordsTotal,
         });
     });
 };

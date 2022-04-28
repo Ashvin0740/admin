@@ -60,7 +60,7 @@ controller.listNft = (req, res) => {
             data: nfts[0].nfts,
             draw: body.draw,
             recordsTotal: nfts[0].count.recordsTotal,
-            recordsFiltered: nfts[0].nfts.length,
+            recordsFiltered: nfts[0].count.recordsTotal,
         });
     });
 };
@@ -129,7 +129,7 @@ controller.transactions = (req, res) => {
             data: nfts[0].nfts,
             draw: body.draw,
             recordsTotal: nfts[0].count.recordsTotal,
-            recordsFiltered: nfts[0].nfts.length,
+            recordsFiltered: nfts[0].count.recordsTotal,
         });
     });
 };
