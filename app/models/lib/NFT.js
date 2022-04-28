@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const NFT = mongoose.Schema({
     sFileName: String,
     sUrl: String,
+    sTxHash: String,
+    sWalletAddress: String,
+    nTokenId: Number,
     iUserId: mongoose.Schema.Types.ObjectId,
     oDog: {
         _id: false,

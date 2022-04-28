@@ -1,13 +1,16 @@
-const { NFT } = require('../../../../models');
+const { Transaction } = require('../../../../models');
 
 const controller = {};
 
-controller.listNft = (req, res) => {
-    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search', 'bMintStatus']);
-    const sort = { dCreatedDate: -1 };
-    const match = {};
+controller.list = (req, res) => {
+    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search', 'draw', 'eType']);
     const startIndex = parseInt(body.start) || 0;
     const endIndex = parseInt(body.length) || 10;
+    const sort = { dCreatedDate: -1 };
+    const match = { eCategory: 'wallet' };
+
+    if (body.eType) match.eType = body.eType;
+
     const facetArray = [
         {
             $sort: sort,
@@ -19,23 +22,36 @@ controller.listNft = (req, res) => {
             $limit: startIndex + endIndex,
         },
     ];
-    if (typeof body.nMintStatus === 'boolean') match.bMintStatus = body.bMintStatus;
 
     const query = [
         {
             $match: match,
         },
         {
+            $lookup: {
+                from: 'users',
+                localField: 'iUserId',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
             $project: {
-                sFileName: true,
-                sUrl: true,
+                eType: true,
                 sTxHash: true,
-                nTokenId: true,
+                nReward: true,
+                nAmount: true,
+                eStatus: true,
+                sFirstName: { $ifNull: ['$user.sFirstName', '-'] },
+                dCreatedDate: true,
             },
         },
         {
             $facet: {
-                nfts: facetArray,
+                transactions: facetArray,
                 count: [
                     {
                         $count: 'recordsTotal',
@@ -47,29 +63,22 @@ controller.listNft = (req, res) => {
             $unwind: '$count',
         },
     ];
-    NFT.aggregate(query, (error, nfts) => {
+    Transaction.aggregate(query, (error, transactions) => {
         if (error) return res.reply(messages.error(), error.toString());
-        if (!nfts.length)
+        if (!transactions.length)
             return res.reply(messages.success(), {
                 data: [],
                 draw: body.draw,
                 recordsTotal: 0,
                 recordsFiltered: 0,
             });
-        res.reply(messages.success(), {
-            data: nfts[0].nfts,
-            draw: body.draw,
-            recordsTotal: nfts[0].count.recordsTotal,
-            recordsFiltered: nfts[0].nfts.length,
-        });
-    });
-};
 
-controller.view = (req, res) => {
-    const { iNftId } = _.pick(req.params, ['iNftId']);
-    NFT.findById(iNftId, (error, nft) => {
-        if (error) return res.reply(messages.error(), error.toString());
-        res.reply(messages.success(), nft);
+        res.reply(messages.success(), {
+            data: transactions[0].transactions,
+            draw: body.draw,
+            recordsTotal: transactions[0].count.recordsTotal,
+            recordsFiltered: transactions[0].transactions.length,
+        });
     });
 };
 

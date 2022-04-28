@@ -16,6 +16,7 @@ const Transaction = mongoose.Schema(
         eCategory: {
             type: String,
             enum: ['game', 'wallet'],
+            default: 'wallet',
         },
     },
     { timestamps: { createdAt: 'dCreatedDate', updatedAt: 'dUpdatedDate' } }

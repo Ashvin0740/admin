@@ -40,7 +40,7 @@ controller.list = (req, res) => {
                 sWalletAddress: true,
                 sFirstName: { $ifNull: ['$sFirstName', '-'] },
                 sLastName: { $ifNull: ['$sLastName', '-'] },
-                // dCreatedDate: true,
+                dCreatedDate: true,
             },
         },
         {
