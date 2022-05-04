@@ -3,7 +3,7 @@ const { NFT } = require('../../../../models');
 const controller = {};
 
 controller.listNft = (req, res) => {
-    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'search', 'bMintStatus']);
+    const body = _.pick(req.query, ['start', 'length', 'size', 'pageNumber', 'draw', 'search', 'bMintStatus']);
     const sort = { dCreatedDate: -1 };
     const match = {};
     const startIndex = parseInt(body.start) || 0;
@@ -13,10 +13,10 @@ controller.listNft = (req, res) => {
             $sort: sort,
         },
         {
-            $skip: startIndex,
+            $limit: startIndex + endIndex,
         },
         {
-            $limit: startIndex + endIndex,
+            $skip: startIndex,
         },
     ];
     if (typeof body.nMintStatus === 'boolean') match.bMintStatus = body.bMintStatus;
@@ -82,10 +82,10 @@ controller.transactions = (req, res) => {
             $sort: sort,
         },
         {
-            $skip: startIndex,
+            $limit: startIndex + endIndex,
         },
         {
-            $limit: startIndex + endIndex,
+            $skip: startIndex,
         },
     ];
     match.bMintStatus = true;
