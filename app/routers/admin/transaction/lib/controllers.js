@@ -8,13 +8,14 @@ controller.list = (req, res) => {
     const endIndex = parseInt(body.length) || 10;
     const sort = { dCreatedDate: -1 };
     const match = { eCategory: 'wallet' };
-
+    const postMatch = {};
     if (body.eType) match.eType = body.eType;
 
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
         match.$or = [];
         match.$or.push({ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { eType: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
+        postMatch.$or = [{ 'user.sFirstName': { $regex: new RegExp(`^.*${search}.*`, 'i') } }];
     }
 
     const facetArray = [
@@ -43,6 +44,9 @@ controller.list = (req, res) => {
         },
         {
             $unwind: '$user',
+        },
+        {
+            $match: postMatch,
         },
         {
             $project: {

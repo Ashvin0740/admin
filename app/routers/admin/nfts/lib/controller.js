@@ -21,6 +21,12 @@ controller.listNft = (req, res) => {
     ];
     if (typeof body.nMintStatus === 'boolean') match.bMintStatus = body.bMintStatus;
 
+    if (body.search?.value) {
+        const search = _.searchRegex(body.search?.value);
+        match.$or = [];
+        match.$or.push({ sFileName: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
+    }
+
     const query = [
         {
             $match: match,
@@ -87,7 +93,7 @@ controller.transactions = (req, res) => {
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
         match.$or = [];
-        match.$or.push({ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
+        match.$or.push({ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sFileName: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
     }
 
     const query = [
