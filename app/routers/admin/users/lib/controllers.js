@@ -14,7 +14,7 @@ controller.list = (req, res) => {
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
         match.$or = [];
-        match.$or.push({ sFirstName: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sLastName: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
+        match.$or.push({ sFirstName: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sLastName: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sWalletAddress: { $regex: new RegExp(`^.*${search}.*`, 'i') } });
     }
 
     const facetArray = [

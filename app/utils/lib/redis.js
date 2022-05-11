@@ -9,28 +9,28 @@ function RedisClient() {
     };
 }
 
-RedisClient.prototype.initialize = function () {
+RedisClient.prototype.initialize = function() {
     this.redisClient = redis.createClient(this.options);
     this.publisher = redis.createClient(this.options);
     this.subscriber = redis.createClient(this.options);
 
     if (process.env.NODE_ENV !== 'prod') this.redisClient.config('SET', 'notify-keyspace-events', 'Ex'); // TODO -> move to setupConfig
     this.redisClient.on('ready', this.setupConfig.bind(this));
-}
+};
 
-RedisClient.prototype.setupConfig = function () {
+RedisClient.prototype.setupConfig = function() {
     this.publisher.setMaxListeners(0);
     this.subscriber.setMaxListeners(0);
     this.subscriber.subscribe('__keyevent@0__:expired'); // reminder service
     this.subscriber.on('message', this.onMessage);
     this.setupVariables();
-}
+};
 
-RedisClient.prototype.getAdapter = function(){
+RedisClient.prototype.getAdapter = function() {
     return ioRedis({ ...this.options, subClient: this.subscriber, pubClient: this.publisher });
-}
+};
 
-RedisClient.prototype.setupVariables = function () {
+RedisClient.prototype.setupVariables = function() {
     this.keysAsync = promisify(this.redisClient.keys).bind(this.redisClient);
     this.incrAsync = promisify(this.redisClient.incr).bind(this.redisClient);
     this.decrAsync = promisify(this.redisClient.decr).bind(this.redisClient);
@@ -63,10 +63,10 @@ RedisClient.prototype.setupVariables = function () {
     // delete
     this.deleteAsync = promisify(this.redisClient.del).bind(this.redisClient);
     this.delete = (key, callback) => this.redisClient.del(key.toString(), callback);
-    this.publish = (eventName, data) => publisher.publish(eventName, _.stringify(data));
-}
+    this.publish = (eventName, data) => this.publisher.publish(eventName, _.stringify(data));
+};
 
-RedisClient.prototype.onMessage = function (channel, message) {
+RedisClient.prototype.onMessage = function(channel, message) {
     // `scheduler:127.0.0.1:reqTurnChange:iTableId-iUserId-extraData`;
 
     let _channel;
@@ -92,6 +92,6 @@ RedisClient.prototype.onMessage = function (channel, message) {
         parsedMessage = _message;
     }
     emitter.emit(_channel, parsedMessage);
-}
+};
 
 module.exports = new RedisClient();
