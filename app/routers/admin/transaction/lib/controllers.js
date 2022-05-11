@@ -13,7 +13,7 @@ controller.list = (req, res) => {
 
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
-        postMatch.$or = [{ 'user.sFirstName': { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { eType: { $regex: new RegExp(`^.*${search}.*`, 'i') } }];
+        postMatch.$or = [{ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { eType: { $regex: new RegExp(`^.*${search}.*`, 'i') } }];
     }
 
     const facetArray = [
