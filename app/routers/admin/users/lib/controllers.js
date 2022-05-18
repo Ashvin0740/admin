@@ -91,6 +91,7 @@ controller.view = (req, res) => {
                 sFirstName: { $ifNull: ['$sFirstName', '-'] },
                 sLastName: { $ifNull: ['$sLastName', '-'] },
                 nStamina: true,
+                nWinPercentage: true,
             },
         },
     ];
@@ -156,8 +157,10 @@ controller.statistics = async (req, res) => {
 };
 
 controller.update = (req, res) => {
-    const body = _.pick(req.body, ['iUserId', 'nStamina', 'sFirstName', 'sLastName', 'sWalletAddress', 'eStatus']);
+    const body = _.pick(req.body, ['iUserId', 'nStamina', 'sFirstName', 'sLastName', 'sWalletAddress', 'eStatus', 'nWinPercentage']);
     const query = { _id: body.iUserId };
+    if (body.nWinPercentage && (body.nWinPercentage < 20 || body.nWinPercentage > 60)) return res.reply(messages.custom.invalid_win_range);
+
     const updateQuery = { $set: body };
     User.updateOne(query, updateQuery, error => {
         if (error) return res.reply(messages.error(), error.toString());

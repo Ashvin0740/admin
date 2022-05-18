@@ -16,6 +16,10 @@ const User = mongoose.Schema(
             type: Number,
             default: 10,
         },
+        nWinPercentage: {
+            type: Number,
+            default: 50,
+        },
         nOTP: Number,
         eStatus: {
             type: String,

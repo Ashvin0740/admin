@@ -8,6 +8,7 @@ const customMessages = {
     user_not_found: { code: 404, message: "Sorry, we didn't find any account with that Email id/Mobile number" },
     user_blocked: { code: 419, message: 'Your account is blocked please contact to the support' },
     user_deleted: { code: 419, message: 'Your account is deleted please contact to the support' },
+    invalid_win_range: { code: 406, message: 'Win percentage should be between 20 to 60.' },
 };
 /**
  * Push notification messages
