@@ -13,7 +13,7 @@ controller.list = (req, res) => {
 
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
-        postMatch.$or = [{ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { eType: { $regex: new RegExp(`^.*${search}.*`, 'i') } }];
+        postMatch.$or = [{ sTxHash: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { eType: { $regex: new RegExp(`^.*${search}.*`, 'i') } }, { 'user.sFirstName': { $regex: new RegExp(`^.*${search}.*`, 'i') } }];
     }
 
     const facetArray = [
@@ -44,6 +44,11 @@ controller.list = (req, res) => {
             $unwind: '$user',
         },
         {
+            $addFields: {
+                sFirstName: { $ifNull: ['$user.sFirstName', '-'] },
+            },
+        },
+        {
             $match: postMatch,
         },
         {
@@ -53,7 +58,7 @@ controller.list = (req, res) => {
                 nReward: true,
                 nAmount: true,
                 eStatus: true,
-                sFirstName: { $ifNull: ['$user.sFirstName', '-'] },
+                sFirstName: true,
                 dCreatedDate: true,
             },
         },
