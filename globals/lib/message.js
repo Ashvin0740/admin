@@ -9,6 +9,7 @@ const customMessages = {
     user_blocked: { code: 419, message: 'Your account is blocked please contact to the support' },
     user_deleted: { code: 419, message: 'Your account is deleted please contact to the support' },
     invalid_win_range: { code: 406, message: 'Win percentage should be between 20 to 60.' },
+    invalid_percentage: { code: 406, message: 'Percentage value is invalid' },
 };
 /**
  * Push notification messages
