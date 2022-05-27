@@ -324,6 +324,7 @@ _.getTournamentCounterKey = id => `counter:${id}`;
 _.getSchedulerKey = (sTask, iTableId = '', iUserId = '', host = process.env.HOST) => `${iTableId}:scheduler:${sTask}:${iUserId}:${host}`;
 
 _.validateRewardPercentage = function(nReward) {
+    if (nReward > 100 || nReward <= 0) return false;
     if (nReward >= 1 && 100 % nReward !== 0) return true;
     if (nReward < 1 && nReward > 0) {
         const _nReward = Number(nReward.toFixed(2));
