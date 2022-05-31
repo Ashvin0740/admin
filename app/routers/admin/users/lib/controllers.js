@@ -109,19 +109,25 @@ controller.statistics = async (req, res) => {
 
         const gameQuery = [
             {
+                $match: {
+                    'aParticipant.iUserId': iUserId,
+                },
+            },
+            {
                 $group: {
                     _id: null,
-                    nTotalBattle: { $sum: { $cond: [{ $eq: ['$aParticipant.iUserId', iUserId] }, 1, 0] } },
+                    nTotalBattle: { $sum: 1 },
                     nTotalWon: { $sum: { $cond: [{ $eq: ['$iWinnerId', iUserId] }, 1, 0] } },
                 },
             },
         ];
-
         const transactionQuery = [
             {
                 $match: {
-                    iUserId,
+                    iUserId: mongodb.mongify(body.iUserId),
                 },
+            },
+            {
                 $group: {
                     _id: null,
                     nTotalEarned: { $sum: { $cond: [{ $and: [{ $eq: ['$eType', 'credit'] }, { $eq: ['$eCategory', 'game'] }] }, '$nAmount', 0] } },
@@ -129,8 +135,7 @@ controller.statistics = async (req, res) => {
                 },
             },
         ];
-
-        const [transactionResult, gameResult] = await Promise.all(Transaction.aggregate(transactionQuery), MetaGame.aggregate(gameQuery));
+        const [transactionResult, gameResult] = await Promise.all([Transaction.aggregate(transactionQuery), MetaGame.aggregate(gameQuery)]);
         const response = {
             nTotalEarned: 0,
             nTotalClaim: 0,
