@@ -328,7 +328,7 @@ _.validateRewardPercentage = function(nReward) {
     if (nReward > 100 || nReward <= 0) return false;
     if (nReward >= 1 && 100 % nReward === 0) return true;
     if (nReward < 1 && nReward > 0) {
-        const _nReward = Number(nReward.toFixed(2));
+        const _nReward = Number(Number(nReward.toFixed(2)));
         if (100 % _nReward === 0 || Number((100 % _nReward).toFixed(2)) === _nReward) return true;
     }
     return false;
