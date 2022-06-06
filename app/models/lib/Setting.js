@@ -4,6 +4,7 @@ const Setting = mongoose.Schema(
     {
         nEntryFee: Number,
         nWinningAmount: Number,
+        nMaxNftUse: Number,
         oScheduledReward: {
             _id: false,
             nBonanza: Number,

@@ -11,7 +11,7 @@ controllers.get = (req, res) => {
 };
 
 controllers.updateSetting = (req, res) => {
-    const body = _.pick(req.body, ['nEntryFee', 'nWinningAmount', 'oScheduledReward']);
+    const body = _.pick(req.body, ['nEntryFee', 'nWinningAmount', 'oScheduledReward', 'nMaxNftUse']);
     const updateQuery = { $set: body };
     if (body.oScheduledReward?.nPercentage && !_.validateRewardPercentage(body.oScheduledReward.nPercentage)) return res.reply(messages.custom.invalid_percentage);
     Setting.findOneAndUpdate({}, updateQuery, { new: true }, error => {
