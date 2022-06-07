@@ -27,6 +27,7 @@ controller.listStatistic = (req, res) => {
                 nRewardDistribute: true,
                 nUserPlayed: true,
                 nUserWon: true,
+                nReward: true,
             },
         },
         {
