@@ -22,10 +22,10 @@ controller.list = (req, res) => {
             $sort: sort,
         },
         {
-            $skip: startIndex,
+            $limit: startIndex + endIndex,
         },
         {
-            $limit: startIndex + endIndex,
+            $skip: startIndex,
         },
     ];
 

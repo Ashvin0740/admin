@@ -38,7 +38,6 @@ operations.sendEmail = (template, subject, body, callback) => {
             from: process.env.SMTP_EMAIL,
             to: body.sEmail,
             subject,
-            text: 'Hello world?',
             html: template,
         },
         error => {
