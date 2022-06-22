@@ -1,5 +1,6 @@
 const _ = require('../../../../../globals/lib/helper');
 const { Setting } = require('../../../../models');
+const { redis } = require('../../../../utils');
 
 const controllers = {};
 
@@ -11,6 +12,7 @@ controllers.get = (req, res) => {
 };
 
 controllers.updateSetting = (req, res) => {
+    redis.deleteAsync('meta:settings');
     const body = _.pick(req.body, ['nEntryFee', 'nWinningAmount', 'oScheduledReward', 'nMaxNftUse']);
     const updateQuery = { $set: body };
     if (body.oScheduledReward?.nPercentage && !_.validateRewardPercentage(body.oScheduledReward.nPercentage)) return res.reply(messages.custom.invalid_percentage);
