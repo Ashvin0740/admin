@@ -153,7 +153,7 @@ controller.statistics = async (req, res) => {
             response.nTotalBattle = gameResult[0].nTotalBattle;
             response.nTotalWon = gameResult[0].nTotalWon;
             response.nTotalLoss = response.nTotalBattle - response.nTotalWon;
-            response.nProficiency = response.nTotalWon / response.nTotalBattle;
+            response.nProficiency = response.nTotalWon / response.nTotalLoss;
         }
         res.reply(messages.success(), response);
     } catch (error) {
