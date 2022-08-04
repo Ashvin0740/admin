@@ -1,5 +1,6 @@
 const customMessages = {
     custom_message: { code: 200, message: 'custom message' },
+    wrong_password: { code: 419, message: 'you have entered wrong password' },
     user_create_success: { code: 200, message: 'Congratulations!! You have been registered successfully.' },
     already_exists_email: { code: 409, message: 'admin already exists with email id' },
     already_exists_mobile: { code: 409, message: 'User already exists with mobile number' },

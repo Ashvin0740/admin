@@ -76,4 +76,15 @@ controllers.logout = (req, res) => {
     });
 };
 
+controllers.changePassword = (req, res) => {
+    const body = _.pick(req.body, ['sCurrentPassword', 'sPassword']);
+    Admin.findOne({ _id: req.user._id }, (error, admin) => {
+        if (error) return res.reply(messages.server_error(), error.toString());
+        if (admin.sPassword !== _.encryptPassword(body.sCurrentPassword)) return res.reply(messages.custom.wrong_password);
+        admin.sPassword = _.encryptPassword(body.sPassword);
+        admin.save(_.errorCallback);
+        res.reply(messages.successfully('Your password has been changed'));
+    });
+};
+
 module.exports = controllers;

@@ -7,5 +7,6 @@ router.post('/login', controllers.login);
 router.post('/forgotPassword', controllers.forgotPassword);
 router.post('/resetPassword', middleware.verifyToken, controllers.resetPassword);
 router.post('/logout', middleware.isAuthenticated, controllers.logout);
+router.post('/changePassword', middleware.isAuthenticated, controllers.changePassword);
 
 module.exports = router;
