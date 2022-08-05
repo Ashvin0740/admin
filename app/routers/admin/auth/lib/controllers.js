@@ -81,7 +81,7 @@ controllers.changePassword = (req, res) => {
     if (!body.sPassword) res.reply(messages.not_found('Password'));
     if (!body.sCurrentPassword) res.reply(messages.not_found('current password'));
 
-    Admin.findOne({ _id: req.user._id }, (error, admin) => {
+    Admin.findOne({ _id: req.admin._id }, (error, admin) => {
         if (error) return res.reply(messages.server_error(), error.toString());
         if (admin.sPassword !== _.encryptPassword(body.sCurrentPassword)) return res.reply(messages.custom.wrong_password);
         admin.sPassword = _.encryptPassword(body.sPassword);
