@@ -1,4 +1,4 @@
-const { Statistic } = require('../../../../models');
+const { Statistic, NFT, User } = require('../../../../models');
 
 const controller = {};
 
@@ -62,6 +62,39 @@ controller.listStatistic = (req, res) => {
             recordsFiltered: statistics[0].count.recordsTotal,
         });
     });
+};
+
+controller.dashboard = async (req, res) => {
+    const userQuery = [
+        {
+            $group: {
+                _id: null,
+                nTotalUser: { $sum: 1 },
+                nActiveUser: { $sum: { $cond: [{ $eq: ['$eStatus', 'y'] }, 1, 0] } },
+            },
+        },
+    ];
+
+    const NFTQuery = [
+        {
+            $group: {
+                _id: null,
+                nTotalNFT: { $sum: 1 },
+                nSoldNFT: { $sum: { $cond: [{ $ifNull: ['$sWalletAddress', false] }, 1, 0] } },
+                nRemainingNFT: { $sum: { $cond: [{ $ifNull: ['$sWalletAddress', false] }, 0, 1] } },
+            },
+        },
+    ];
+
+    const [[userResponse], [nftResponse]] = await Promise.all([User.aggregate(userQuery), NFT.aggregate(NFTQuery)]);
+    const response = {
+        nTotalUser: 0,
+        nActiveUser: 0,
+        nTotalNFT: 0,
+        nSoldNFT: 0,
+        nRemainingNFT: 0,
+    };
+    res.reply(messages.success(), { ...response, ...userResponse, ...nftResponse });
 };
 
 module.exports = controller;
