@@ -175,7 +175,7 @@ controller.update = (req, res) => {
 
 controller.delete = (req, res) => {
     const { iUserId } = _.pick(req.body, ['iUserId']);
-    User.updateOne({ _id: iUserId }, { $set: { eStatus: 'd' } }, error => {
+    User.updateOne({ _id: iUserId }, { $set: { eStatus: 'n' } }, error => {
         if (error) return res.reply(messages.error(), error.toString());
         res.reply(messages.success());
     });
