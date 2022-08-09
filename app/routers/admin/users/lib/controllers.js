@@ -9,7 +9,7 @@ controller.list = (req, res) => {
     const startIndex = parseInt(body.start) || 0;
     const endIndex = parseInt(body.length) || 10;
 
-    const match = { eStatus: { $ne: 'd' } };
+    const match = { eStatus: { $ne: 'n' } };
 
     if (body.search?.value) {
         const search = _.searchRegex(body.search?.value);
