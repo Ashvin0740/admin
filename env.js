@@ -1,6 +1,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'stag';
 process.env.HOST = process.env.HOST || 'localhost';
-process.env.PORT = 5000;
+process.env.PORT = 5001;
 
 const oEnv = {};
 
@@ -14,7 +14,7 @@ oEnv.dev = {
 oEnv.stag = {
     BASE_URL: 'http://184.73.111.236:5000/',
     BASE_API_PATH: 'http://184.73.111.236:5000/api/v1',
-    DB_URL: 'mongodb+srv://metatank:metatank123@cluster0.57mxh.mongodb.net/metatank', // metatank:metatank123
+    DB_URL: 'mongodb+srv://metatank:vFK6KAke05sqpLqe@metatank.c0idsfl.mongodb.net/metatank', // metatank:metatank123
     GAME_URL: 'http://localhost:3000/api/v1',
     REDIS_HOST: 'localhost',
     FRONTEND_URL: 'http://184.73.111.236:5001/a',
