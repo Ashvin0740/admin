@@ -1,6 +1,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'stag';
 process.env.HOST = process.env.HOST || 'localhost';
-process.env.PORT = 5001;
+process.env.PORT = 5000;
 
 const oEnv = {};
 
